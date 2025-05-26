@@ -43,9 +43,20 @@ def read_emission_data(filename, max_records=5):
             return []
     return []
 
+def display_records(records):
+    if not records:
+        print("No records to display.")
+        return
+    print(f"Loaded {len(records)} records.\n")
+    for record in records:
+        print(record)
+
 def main():
     filename = "Nitrogen oxide emissions by facility.csv"
     emission_records = read_emission_data(filename)
+    
+    print("Emission Records:")
+    display_records(emission_records)
 
 if __name__ == "__main__":
     main()
