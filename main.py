@@ -1,7 +1,29 @@
+"""
+CST8002 Programming Language Research Project
+Professor: Stanley Pieda
+Due Date: 05/25/2025
+Author: Rachid Hankir
+"""
+
 import csv
 from EmissionRecord import EmissionRecord
 
 def read_emission_data(filename, max_records=5):
+    """
+    Read the emission dataset from a CSV file and return a list of EmissionRecord objects.
+
+    Args:
+        filename (str): The path to the CSV file.
+        max_records (int): Maximum number of records to read (default is 5).
+
+    Returns:
+        list: A list of EmissionRecord objects.
+
+    Raises:
+        FileNotFoundError: If the CSV file is not found.
+        UnicodeDecodeError: If the file cannot be decoded with the tried encodings.
+        Exception: For other errors during file reading or parsing.
+    """
     records = []
     encodings = ['utf-8', 'latin-1']
     for encoding in encodings:
@@ -44,6 +66,12 @@ def read_emission_data(filename, max_records=5):
     return []
 
 def display_records(records):
+    """
+    Display all records in the provided list.
+
+    Args:
+        records (list): List of EmissionRecord objects to display.
+    """
     if not records:
         print("No records to display.")
         return
@@ -52,8 +80,11 @@ def display_records(records):
         print(record)
 
 def main():
+    """
+    Main function to run the program, displaying the student's name and emission records.
+    """
     full_name = "Rachid Hankir"
-    print(f"Author: {full_name}\n")
+    print(f"\nAuthor: {full_name}\n")
     
     filename = "Nitrogen oxide emissions by facility.csv"
     emission_records = read_emission_data(filename)
