@@ -52,11 +52,17 @@ def display_records(records):
         print(record)
 
 def main():
+    full_name = "Rachid Hankir"
+    print(f"Author: {full_name}\n")
+    
     filename = "Nitrogen oxide emissions by facility.csv"
     emission_records = read_emission_data(filename)
     
     print("Emission Records:")
     display_records(emission_records)
+    
+    print(f"\nProgram completed. \nPrepared by: {full_name}\n")
+    input("Press Enter to exit...")
 
 if __name__ == "__main__":
     main()
