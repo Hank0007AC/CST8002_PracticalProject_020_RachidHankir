@@ -5,6 +5,12 @@ Due Date: 06/15/2025
 Author: Rachid Hankir
 """
 
+import os
+import sys
+# Ajouter le dossier racine au chemin Python pour résoudre les importations
+# Add the root directory to the Python path to resolve imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from business.emission_manager import EmissionManager
 
 # Fonction pour afficher le menu interactif
