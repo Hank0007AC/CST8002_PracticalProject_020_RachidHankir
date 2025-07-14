@@ -1,22 +1,21 @@
 """
 CST8002 Programming Language Research Project
 Practical Project Part 03
-Professor: Tyler DeLay
+Professor: Stanley Pieda
 Due Date: 07/13/2025
 Author: Rachid Hankir
 """
 
 from persistence.data_access import DataAccess
-from model.BasicEmissionRecord import BasicEmissionRecord  # Importer la sous-classe par défaut
-# Importer d'autres sous-classes si nécessaire
-from model.DetailedEmissionRecord import DetailedEmissionRecord
+from model.BasicEmissionRecord import BasicEmissionRecord  # Importer la sous-classe par défaut pour chargement
+from model.DetailedEmissionRecord import DetailedEmissionRecord  # Importer pour création détaillée
 
 # Classe pour gérer la logique métier des enregistrements d'émissions
 # Class to manage the business logic of emission records
 class EmissionManager:
     """
     A class to manage emission records, including CRUD operations and data persistence.
-    Updated for Practical Project Part 3 to support polymorphism with Record subclasses.
+    Updated for Practical Project Part 3 to support polymorphism with Record subclasses and format selection.
     """
     # Initialisation avec une instance de DataAccess
     # Initialization with a DataAccess instance
@@ -63,14 +62,15 @@ class EmissionManager:
         # Save via the persistence layer
         return self._data_access.write_records(self._records)
 
-    # Afficher un ou plusieurs enregistrements avec polymorphisme
-    # Display one or multiple records with polymorphism
-    def display_records(self, index=None):
+    # Afficher un ou plusieurs enregistrements avec option de format
+    # Display one or multiple records with format option
+    def display_records(self, index=None, format_type='basic'):
         """
-        Display records, either all or a specific one.
+        Display records using specified format type.
 
         Args:
             index (int, optional): Index of the record to display. Defaults to None (all records).
+            format_type (str): 'basic' or 'detailed' to force format (default 'basic').
 
         Returns:
             list: List of displayed records.
@@ -78,10 +78,15 @@ class EmissionManager:
         # Liste des enregistrements à afficher
         # List of records to display
         display_list = [self._records[index]] if index is not None else self._records
-        # Afficher chaque enregistrement en appelant format_output polymorphiquement
-        # Display each record by calling format_output polymorphically
         for i, record in enumerate(display_list):
-            print(f"Record {i + 1}: {record.format_output()}")
+            if format_type == 'detailed':
+                # Affichage détaillé avec plus de champs : année | nom installation | nom entreprise | ville | province | adresse | latitude | longitude | émissions | unités | détails installation
+                # Detailed display with more fields: year | facility_name | company_name | city | province | address | latitude | longitude | emissions | units | facility_details
+                print(f"Record {i + 1}: {record.report_year} | {record.facility_name} | {record.company_name} | {record.city} | {record.province} | {record.address} | {record.latitude} | {record.longitude} | {record.emissions} {record.units} | {record.facility_details}")
+            else:
+                # Affichage basique : année | nom installation | émissions unités
+                # Basic display: year | facility_name | emissions units
+                print(f"Record {i + 1}: {record.report_year} | {record.facility_name} | {record.emissions} {record.units}")
         return display_list
 
     # Créer un nouvel enregistrement (par défaut BasicEmissionRecord)
@@ -173,7 +178,8 @@ class EmissionManager:
         Delete a record by index.
 
         Args:
-            index (int): Index of the record to delete.
+            index (int): Index of the record to edit.
+            ... (inherited)
 
         Returns:
             bool: True if successful, False if index invalid.
