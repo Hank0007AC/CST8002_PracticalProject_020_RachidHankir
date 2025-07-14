@@ -1,33 +1,35 @@
 """
 CST8002 Programming Language Research Project
-Practical Project Part 02
+Practical Project Part 03
 Professor: Stanley Pieda
-Due Date: 06/15/2025
+Due Date: 07/13/2025
 Author: Rachid Hankir
 """
 
 import csv
 import uuid
-from model.EmissionRecord import EmissionRecord
+from model.BasicEmissionRecord import BasicEmissionRecord  # Utiliser Basic par défaut pour chargement
+# Pour démontrer polymorphisme, on pourrait alterner, mais par défaut Basic
 
 # Classe pour gérer l'accès aux données (lecture et écriture CSV)
 # Class to manage data access (CSV reading and writing)
 class DataAccess:
     """
     A class to handle persistence operations for emission records.
+    Updated for Practical Project Part 3 to support Record subclasses.
     """
     # Lecture des enregistrements depuis un fichier CSV
     # Read records from a CSV file
     def read_records(self, filename, max_records=100):
         """
-        Read emission records from a CSV file.
+        Read emission records from a CSV file as BasicEmissionRecord instances.
 
         Args:
             filename (str): Path to the CSV file.
             max_records (int): Maximum number of records to read (default 100).
 
         Returns:
-            list: List of EmissionRecord objects.
+            list: List of BasicEmissionRecord objects.
 
         Raises:
             FileNotFoundError: If the file is not found.
@@ -58,9 +60,9 @@ class DataAccess:
                         # Complete incomplete rows
                         while len(row) < 14:
                             row.append('')
-                        # Créer un objet EmissionRecord
-                        # Create an EmissionRecord object
-                        record = EmissionRecord(
+                        # Créer un objet BasicEmissionRecord (sous-classe par défaut)
+                        # Create a BasicEmissionRecord object (default subclass)
+                        record = BasicEmissionRecord(
                             npri_id=row[0],
                             facility_name=row[1],
                             company_name=row[2],
@@ -106,7 +108,7 @@ class DataAccess:
         Write emission records to a new CSV file with a UUID-generated name.
 
         Args:
-            records (list): List of EmissionRecord objects to write.
+            records (list): List of Record objects to write.
 
         Returns:
             str: Name of the generated CSV file.
@@ -131,8 +133,8 @@ class DataAccess:
                     "Province", "PostalCode", "Latitude", "Longitude", "Emissions",
                     "Units", "Facility details", "Facility information", "Report year"
                 ])
-                # Écrire chaque enregistrement
-                # Write each record
+                # Écrire chaque enregistrement en utilisant les getters
+                # Write each record using getters
                 for record in records:
                     csv_writer.writerow([
                         record.npri_id, record.facility_name, record.company_name,
