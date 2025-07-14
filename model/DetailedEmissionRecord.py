@@ -1,8 +1,8 @@
 """
 CST8002 Programming Language Research Project
 Practical Project Part 03
-Professor: Stanley Pieda
-Due Date: 07/08/2025
+Professor: Tyler DeLay
+Due Date: 07/13/2025
 Author: Rachid Hankir
 """
 

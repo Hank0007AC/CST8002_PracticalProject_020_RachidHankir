@@ -1,7 +1,7 @@
 """
 CST8002 Programming Language Research Project
 Practical Project Part 03
-Professor: Stanley Pieda
+Professor: Tyler DeLay
 Due Date: 07/13/2025
 Author: Rachid Hankir
 """
@@ -87,13 +87,13 @@ def main():
         elif choice == "3":
             # Afficher tous les enregistrements en format basique
             # Display all records in basic format
-            manager.display_records()
+            manager.display_records(format_type='basic')
             input("Press Enter to continue...")
 
         elif choice == "4":
-            # Afficher tous les enregistrements en format détaillé (simulé par appel polymorphe si sous-classes utilisées)
-            # Display all records in detailed format (simulated by polymorphic call if subclasses used)
-            manager.display_records()
+            # Afficher tous les enregistrements en format détaillé
+            # Display all records in detailed format
+            manager.display_records(format_type='detailed')
             input("Press Enter to continue...")
 
         elif choice == "5":

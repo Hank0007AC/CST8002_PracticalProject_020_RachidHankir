@@ -1,7 +1,7 @@
 """
 CST8002 Programming Language Research Project
 Practical Project Part 03
-Professor: Stanley Pieda
+Professor: Tyler DeLay
 Due Date: 07/13/2025
 Author: Rachid Hankir
 """
@@ -67,7 +67,7 @@ class EmissionManager:
     # Display one or multiple records with polymorphism
     def display_records(self, index=None):
         """
-        Display records using polymorphic format_output method.
+        Display records, either all or a specific one.
 
         Args:
             index (int, optional): Index of the record to display. Defaults to None (all records).
