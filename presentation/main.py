@@ -1,8 +1,8 @@
 """
 CST8002 Programming Language Research Project
 Practical Project Part 03
-Professor: Tyler DeLay
-Due Date: 07/13/2025
+Professor: Stanley Pieda
+Due Date: 07/08/2025
 Author: Rachid Hankir
 """
 
@@ -97,13 +97,14 @@ def main():
             input("Press Enter to continue...")
 
         elif choice == "5":
-            # Afficher un enregistrement spécifique
-            # Display a specific record
+            # Afficher un enregistrement spécifique avec choix de format
+            # Display a specific record with format choice
             try:
                 index = int(input("Enter record index (1-based): ")) - 1
-                manager.display_records(index)
+                format_type = input("Enter format type (basic/detailed): ").lower()
+                manager.display_records(index, format_type)
             except (ValueError, IndexError):
-                print("Invalid index.")
+                print("Invalid index or format type.")
             input("Press Enter to continue...")
 
         elif choice == "6":
