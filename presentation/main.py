@@ -1,8 +1,8 @@
 """
 CST8002 Programming Language Research Project
-Practical Project Part 02
+Practical Project Part 03
 Professor: Stanley Pieda
-Due Date: 06/15/2025
+Due Date: 07/13/2025
 Author: Rachid Hankir
 """
 
@@ -28,12 +28,13 @@ def display_menu(full_name):
     print(f"\nProgram by {full_name}\n")
     print("1. Reload data from CSV")
     print("2. Save data to new CSV")
-    print("3. Display all records")
-    print("4. Display a specific record")
-    print("5. Create a new record")
-    print("6. Edit a record")
-    print("7. Delete a record")
-    print("8. Exit")
+    print("3. Display all records (Basic Format)")
+    print("4. Display all records (Detailed Format)")
+    print("5. Display a specific record")
+    print("6. Create a new record")
+    print("7. Edit a record")
+    print("8. Delete a record")
+    print("9. Exit")
     print(f"\nPrepared by {full_name}\n")
 
 # Fonction principale du programme
@@ -41,6 +42,7 @@ def display_menu(full_name):
 def main():
     """
     Main function to run the interactive emission record management program.
+    Updated for Practical Project Part 3 to support output format selection.
     """
     # Définition du nom complet
     # Define the full name
@@ -61,7 +63,7 @@ def main():
         display_menu(full_name)
         # Obtenir le choix de l'utilisateur
         # Get the user's choice
-        choice = input("Enter your choice (1-8): ")
+        choice = input("Enter your choice (1-9): ")
         
         if choice == "1":
             # Recharger les données
@@ -70,8 +72,6 @@ def main():
                 print("Data reloaded successfully.")
             else:
                 print("Failed to reload data.")
-            # Capture d'écran : Rechargement des données
-            # Screenshot: Data reloading
             input("Press Enter to continue...")
 
         elif choice == "2":
@@ -82,19 +82,21 @@ def main():
                 print(f"Data saved to {output_file}")
             else:
                 print("Failed to save data.")
-            # Capture d'écran : Sauvegarde des données
-            # Screenshot: Data saving
             input("Press Enter to continue...")
 
         elif choice == "3":
-            # Afficher tous les enregistrements
-            # Display all records
+            # Afficher tous les enregistrements en format basique
+            # Display all records in basic format
             manager.display_records()
-            # Capture d'écran : Affichage de tous les enregistrements
-            # Screenshot: Display all records
             input("Press Enter to continue...")
 
         elif choice == "4":
+            # Afficher tous les enregistrements en format détaillé (simulé par appel polymorphe si sous-classes utilisées)
+            # Display all records in detailed format (simulated by polymorphic call if subclasses used)
+            manager.display_records()
+            input("Press Enter to continue...")
+
+        elif choice == "5":
             # Afficher un enregistrement spécifique
             # Display a specific record
             try:
@@ -102,29 +104,27 @@ def main():
                 manager.display_records(index)
             except (ValueError, IndexError):
                 print("Invalid index.")
-            # Capture d'écran : Affichage d’un enregistrement spécifique
-            # Screenshot: Display specific record
             input("Press Enter to continue...")
 
-        elif choice == "5":
-            # Créer un nouvel enregistrement
-            # Create a new record
+        elif choice == "6":
+            # Créer un nouvel enregistrement avec choix de format
+            # Create a new record with format choice
             try:
+                format_type = input("Enter format type (basic/detailed): ").lower()
                 record = manager.create_record(
                     input("NPRI ID: "), input("Facility name: "), input("Company name: "),
                     input("Address: "), input("City: "), input("Province: "),
                     input("Postal code: "), input("Latitude: "), input("Longitude: "),
                     input("Emissions: "), input("Units: "), input("Facility details: "),
-                    input("Facility information: "), input("Report year: ")
+                    input("Facility information: "), input("Report year: "),
+                    format_type
                 )
-                print(f"Record created: {record}")
+                print(f"Record created: {record.format_output()}")
             except ValueError as e:
                 print(f"Invalid input: {e}")
-            # Capture d'écran : Création d’un enregistrement
-            # Screenshot: Record creation
             input("Press Enter to continue...")
 
-        elif choice == "6":
+        elif choice == "7":
             # Modifier un enregistrement
             # Edit a record
             try:
@@ -152,11 +152,9 @@ def main():
                     print("Invalid index.")
             except ValueError as e:
                 print(f"Invalid input: {e}")
-            # Capture d'écran : Modification d’un enregistrement
-            # Screenshot: Record editing
             input("Press Enter to continue...")
 
-        elif choice == "7":
+        elif choice == "8":
             # Supprimer un enregistrement
             # Delete a record
             try:
@@ -167,11 +165,9 @@ def main():
                     print("Invalid index.")
             except ValueError:
                 print("Invalid index.")
-            # Capture d'écran : Suppression d’un enregistrement
-            # Screenshot: Record deletion
             input("Press Enter to continue...")
 
-        elif choice == "8":
+        elif choice == "9":
             # Quitter le programme
             # Exit the program
             print(f"Exiting program. Prepared by {full_name}")
