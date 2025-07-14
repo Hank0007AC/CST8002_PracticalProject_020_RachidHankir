@@ -72,7 +72,7 @@ class EmissionManager:
         Returns:
             list: List of displayed records.
         """
-        # Liste des enregistrements à afficher
+        # Liste enregistrement à afficher
         # List of records to display
         display_list = [self._records[index]] if index is not None else self._records
         # Afficher chaque enregistrement
