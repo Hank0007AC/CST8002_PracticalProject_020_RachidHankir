@@ -179,8 +179,7 @@ class EmissionManager:
         Delete a record by index.
 
         Args:
-            index (int): Index of the record to edit.
-            ... (inherited)
+            index (int): Index of the record to delete.
 
         Returns:
             bool: True if successful, False if index invalid.
@@ -205,8 +204,8 @@ class EmissionManager:
         """
         return self._records
 
-    # Nouvelle méthode pour filtrer les enregistrements sur plusieurs colonnes (Part 4)
-    # New method to filter records on multiple columns (Part 4)
+    # Filtrer les enregistrements sur plusieurs colonnes (nouveauté Part 4)
+    # Filter records on multiple columns (new for Part 4)
     def filter_records(self, city=None, emissions_min=None):
         """
         Filter records based on city and minimum emissions value.
