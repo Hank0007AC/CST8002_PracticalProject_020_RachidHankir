@@ -1,8 +1,8 @@
 """
 CST8002 Programming Language Research Project
-Practical Project Part 03
+Practical Project Part 04
 Professor: Stanley Pieda
-Due Date: 07/13/2025
+Due Date: 07/29/2025
 Author: Rachid Hankir
 """
 
@@ -16,6 +16,7 @@ class EmissionManager:
     """
     A class to manage emission records, including CRUD operations and data persistence.
     Updated for Practical Project Part 3 to support polymorphism with Record subclasses and format selection.
+    Updated for Practical Project Part 4 to support multi-column filtering.
     """
     # Initialisation avec une instance de DataAccess
     # Initialization with a DataAccess instance
@@ -203,3 +204,31 @@ class EmissionManager:
             list: List of Record objects.
         """
         return self._records
+
+    # Nouvelle méthode pour filtrer les enregistrements sur plusieurs colonnes (Part 4)
+    # New method to filter records on multiple columns (Part 4)
+    def filter_records(self, city=None, emissions_min=None):
+        """
+        Filter records based on city and minimum emissions value.
+
+        Args:
+            city (str, optional): City to filter by.
+            emissions_min (float, optional): Minimum emissions value to filter by.
+
+        Returns:
+            list: Filtered list of Record objects.
+        """
+        # Filtrer la liste des enregistrements selon les critères fournis
+        # Filter the list of records based on the provided criteria
+        filtered = self._records
+        if city is not None:
+            # Filtrer par ville (insensible à la casse)
+            # Filter by city (case-insensitive)
+            filtered = [r for r in filtered if r.city.lower() == city.lower()]
+        if emissions_min is not None:
+            # Filtrer par émissions minimales
+            # Filter by minimum emissions
+            filtered = [r for r in filtered if r.emissions >= emissions_min]
+        # Retourner la liste filtrée
+        # Return the filtered list
+        return filtered
