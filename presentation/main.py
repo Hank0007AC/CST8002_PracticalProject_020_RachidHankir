@@ -1,8 +1,8 @@
 """
 CST8002 Programming Language Research Project
-Practical Project Part 03
+Practical Project Part 04
 Professor: Stanley Pieda
-Due Date: 07/08/2025
+Due Date: 08/03/2025
 Author: Rachid Hankir
 """
 
@@ -34,7 +34,8 @@ def display_menu(full_name):
     print("6. Create a new record")
     print("7. Edit a record")
     print("8. Delete a record")
-    print("9. Exit")
+    print("9. Filter records by city and minimum emissions")
+    print("10. Exit")
     print(f"\nPrepared by {full_name}\n")
 
 # Fonction principale du programme
@@ -43,6 +44,7 @@ def main():
     """
     Main function to run the interactive emission record management program.
     Updated for Practical Project Part 3 to support output format selection.
+    Updated for Practical Project Part 4 to support multi-column filtering.
     """
     # Définition du nom complet
     # Define the full name
@@ -63,7 +65,7 @@ def main():
         display_menu(full_name)
         # Obtenir le choix de l'utilisateur
         # Get the user's choice
-        choice = input("Enter your choice (1-9): ")
+        choice = input("Enter your choice (1-10): ")
         
         if choice == "1":
             # Recharger les données
@@ -169,6 +171,23 @@ def main():
             input("Press Enter to continue...")
 
         elif choice == "9":
+            # Filtrer les enregistrements par ville et émissions minimales
+            # Filter records by city and minimum emissions
+            try:
+                city = input("Enter city to filter (leave blank for no filter): ") or None
+                emissions_min = float(input("Enter minimum emissions to filter (leave blank for no filter): ") or 0.0)
+                filtered_records = manager.filter_records(city, emissions_min)
+                if filtered_records:
+                    print("Filtered records:")
+                    for i, record in enumerate(filtered_records):
+                        print(f"Record {i + 1}: {record.format_output()}")
+                else:
+                    print("No records match the filter criteria.")
+            except ValueError:
+                print("Invalid input for emissions value.")
+            input("Press Enter to continue...")
+
+        elif choice == "10":
             # Quitter le programme
             # Exit the program
             print(f"Exiting program. Prepared by {full_name}")
@@ -176,8 +195,3 @@ def main():
         else:
             print("Invalid choice. Please try again.")
             input("Press Enter to continue...")
-
-# Exécution du programme si le fichier est lancé directement
-# Run the program if the file is executed directly
-if __name__ == "__main__":
-    main()
