@@ -6,229 +6,192 @@ Due Date: 08/03/2025
 Author: Rachid Hankir
 """
 
-from persistence.data_access import DataAccess
-from model.BasicEmissionRecord import BasicEmissionRecord  # Importer la sous-classe par défaut pour chargement
-from model.DetailedEmissionRecord import DetailedEmissionRecord  # Importer pour création détaillée
+import os
+import sys
+# Ajouter le dossier racine au chemin Python pour résoudre les importations
+# Add the root directory to the Python path to resolve imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Classe pour gérer la logique métier des enregistrements d'émissions
-# Class to manage the business logic of emission records
-class EmissionManager:
+from business.emission_manager import EmissionManager
+
+# Fonction pour afficher le menu interactif
+# Function to display the interactive menu
+def display_menu(full_name):
     """
-    A class to manage emission records, including CRUD operations and data persistence.
-    Updated for Practical Project Part 3 to support polymorphism with Record subclasses and format selection.
+    Display the interactive menu with the author's name.
+
+    Args:
+        full_name (str): The full name of the author.
+    """
+    # Afficher le menu avec le nom
+    # Display the menu with the name
+    print(f"\nProgram by {full_name}\n")
+    print("1. Reload data from CSV")
+    print("2. Save data to new CSV")
+    print("3. Display all records (Basic Format)")
+    print("4. Display all records (Detailed Format)")
+    print("5. Display a specific record")
+    print("6. Create a new record")
+    print("7. Edit a record")
+    print("8. Delete a record")
+    print("9. Filter records by city and minimum emissions")
+    print("10. Exit")
+    print(f"\nPrepared by {full_name}\n")
+
+# Fonction principale du programme
+# Main function of the program
+def main():
+    """
+    Main function to run the interactive emission record management program.
+    Updated for Practical Project Part 3 to support output format selection.
     Updated for Practical Project Part 4 to support multi-column filtering.
     """
-    # Initialisation avec une instance de DataAccess
-    # Initialization with a DataAccess instance
-    def __init__(self):
-        """
-        Initialize the EmissionManager with an empty record list and DataAccess.
-        """
-        # Liste pour stocker les enregistrements en mémoire (type Record pour polymorphisme)
-        # List to store records in memory (Record type for polymorphism)
-        self._records = []
-        # Instance de DataAccess pour les opérations de persistance
-        # DataAccess instance for persistence operations
-        self._data_access = DataAccess()
+    # Définition du nom complet
+    # Define the full name
+    full_name = "Rachid Hankir"
+    # Initialisation du gestionnaire d'émissions
+    # Initialize the emission manager
+    manager = EmissionManager()
+    # Nom du fichier CSV
+    # CSV file name
+    filename = "Nitrogen oxide emissions by facility.csv"
+    # Charger les données initiales
+    # Load initial data
+    manager.reload_data(filename)
 
-    # Recharger les données depuis le CSV
-    # Reload data from the CSV
-    def reload_data(self, filename):
-        """
-        Reload records from the specified CSV file.
-
-        Args:
-            filename (str): Path to the CSV file.
-
-        Returns:
-            bool: True if successful, False otherwise.
-        """
-        # Lire les enregistrements via la couche de persistance
-        # Read records via the persistence layer
-        self._records = self._data_access.read_records(filename)
-        # Retourner si la lecture a réussi
-        # Return whether the read was successful
-        return len(self._records) > 0
-
-    # Sauvegarder les données dans un nouveau CSV
-    # Save data to a new CSV
-    def save_data(self):
-        """
-        Save current records to a new CSV file with a UUID name.
-
-        Returns:
-            str: Name of the generated file, or None if failed.
-        """
-        # Sauvegarder via la couche de persistance
-        # Save via the persistence layer
-        return self._data_access.write_records(self._records)
-
-    # Afficher un ou plusieurs enregistrements avec option de format
-    # Display one or multiple records with format option
-    def display_records(self, index=None, format_type='basic'):
-        """
-        Display records using specified format type.
-
-        Args:
-            index (int, optional): Index of the record to display. Defaults to None (all records).
-            format_type (str): 'basic' or 'detailed' to force format (default 'basic').
-
-        Returns:
-            list: List of displayed records.
-        """
-        # Liste des enregistrements à afficher
-        # List of records to display
-        display_list = [self._records[index]] if index is not None else self._records
-        for i, record in enumerate(display_list):
-            if format_type == 'detailed':
-                # Affichage détaillé avec plus de champs : année | nom installation | nom entreprise | ville | province | adresse | latitude | longitude | émissions | unités | détails installation
-                # Detailed display with more fields: year | facility_name | company_name | city | province | address | latitude | longitude | emissions | units | facility_details
-                print(f"Record {i + 1}: {record.report_year} | {record.facility_name} | {record.company_name} | {record.city} | {record.province} | {record.address} | {record.latitude} | {record.longitude} | {record.emissions} {record.units} | {record.facility_details}")
+    while True:
+        # Afficher le menu
+        # Display the menu
+        display_menu(full_name)
+        # Obtenir le choix de l'utilisateur
+        # Get the user's choice
+        choice = input("Enter your choice (1-10): ")
+        
+        if choice == "1":
+            # Recharger les données
+            # Reload data
+            if manager.reload_data(filename):
+                print("Data reloaded successfully.")
             else:
-                # Affichage basique : année | nom installation | émissions unités
-                # Basic display: year | facility_name | emissions units
-                print(f"Record {i + 1}: {record.report_year} | {record.facility_name} | {record.emissions} {record.units}")
-        return display_list
+                print("Failed to reload data.")
+            input("Press Enter to continue...")
 
-    # Créer un nouvel enregistrement (par défaut BasicEmissionRecord)
-    # Create a new record (default BasicEmissionRecord)
-    def create_record(self, npri_id, facility_name, company_name, address, city, province, postal_code, latitude, longitude, emissions, units, facility_details, facility_information, report_year, format_type='basic'):
-        """
-        Create and add a new emission record using subclass based on format_type.
+        elif choice == "2":
+            # Sauvegarder les données
+            # Save data
+            output_file = manager.save_data()
+            if output_file:
+                print(f"Data saved to {output_file}")
+            else:
+                print("Failed to save data.")
+            input("Press Enter to continue...")
 
-        Args:
-            ... (inherited)
-            format_type (str): 'basic' for BasicEmissionRecord or 'detailed' for DetailedEmissionRecord.
+        elif choice == "3":
+            # Afficher tous les enregistrements en format basique
+            # Display all records in basic format
+            manager.display_records(format_type='basic')
+            input("Press Enter to continue...")
 
-        Returns:
-            Record: The created record.
-        """
-        # Choisir la sous-classe en fonction du type de format
-        # Choose the subclass based on the format type
-        if format_type == 'detailed':
-            record = DetailedEmissionRecord(
-                npri_id, facility_name, company_name, address, city, province,
-                postal_code, latitude, longitude, emissions, units, facility_details,
-                facility_information, report_year
-            )
+        elif choice == "4":
+            # Afficher tous les enregistrements en format détaillé
+            # Display all records in detailed format
+            manager.display_records(format_type='detailed')
+            input("Press Enter to continue...")
+
+        elif choice == "5":
+            # Afficher un enregistrement spécifique avec choix de format
+            # Display a specific record with format choice
+            try:
+                index = int(input("Enter record index (1-based): ")) - 1
+                format_type = input("Enter format type (basic/detailed): ").lower()
+                manager.display_records(index, format_type)
+            except (ValueError, IndexError):
+                print("Invalid index or format type.")
+            input("Press Enter to continue...")
+
+        elif choice == "6":
+            # Créer un nouvel enregistrement avec choix de format
+            # Create a new record with format choice
+            try:
+                format_type = input("Enter format type (basic/detailed): ").lower()
+                record = manager.create_record(
+                    input("NPRI ID: "), input("Facility name: "), input("Company name: "),
+                    input("Address: "), input("City: "), input("Province: "),
+                    input("Postal code: "), input("Latitude: "), input("Longitude: "),
+                    input("Emissions: "), input("Units: "), input("Facility details: "),
+                    input("Facility information: "), input("Report year: "),
+                    format_type
+                )
+                print(f"Record created: {record.format_output()}")
+            except ValueError as e:
+                print(f"Invalid input: {e}")
+            input("Press Enter to continue...")
+
+        elif choice == "7":
+            # Modifier un enregistrement
+            # Edit a record
+            try:
+                index = int(input("Enter record index (1-based): ")) - 1
+                print("Enter new values (leave blank to keep current):")
+                if manager.edit_record(
+                    index,
+                    npri_id=input("NPRI ID: ") or None,
+                    facility_name=input("Facility name: ") or None,
+                    company_name=input("Company name: ") or None,
+                    address=input("Address: ") or None,
+                    city=input("City: ") or None,
+                    province=input("Province: ") or None,
+                    postal_code=input("Postal code: ") or None,
+                    latitude=input("Latitude: ") or None,
+                    longitude=input("Longitude: ") or None,
+                    emissions=input("Emissions: ") or None,
+                    units=input("Units: ") or None,
+                    facility_details=input("Facility details: ") or None,
+                    facility_information=input("Facility information: ") or None,
+                    report_year=input("Report year: ") or None
+                ):
+                    print("Record updated successfully.")
+                else:
+                    print("Invalid index.")
+            except ValueError as e:
+                print(f"Invalid input: {e}")
+            input("Press Enter to continue...")
+
+        elif choice == "8":
+            # Supprimer un enregistrement
+            # Delete a record
+            try:
+                index = int(input("Enter record index (1-based): ")) - 1
+                if manager.delete_record(index):
+                    print("Record deleted successfully.")
+                else:
+                    print("Invalid index.")
+            except ValueError:
+                print("Invalid index.")
+            input("Press Enter to continue...")
+
+        elif choice == "9":
+            # Filtrer les enregistrements par ville et émissions minimales
+            # Filter records by city and minimum emissions
+            try:
+                city = input("Enter city to filter (leave blank for no filter): ") or None
+                emissions_min = float(input("Enter minimum emissions to filter (leave blank for no filter): ") or 0.0)
+                filtered_records = manager.filter_records(city, emissions_min)
+                if filtered_records:
+                    print("Filtered records:")
+                    for i, record in enumerate(filtered_records):
+                        print(f"Record {i + 1}: {record.format_output()}")
+                else:
+                    print("No records match the filter criteria.")
+            except ValueError:
+                print("Invalid input for emissions value.")
+            input("Press Enter to continue...")
+
+        elif choice == "10":
+            # Quitter le programme
+            # Exit the program
+            print(f"Exiting program. Prepared by {full_name}")
+            break
         else:
-            record = BasicEmissionRecord(
-                npri_id, facility_name, company_name, address, city, province,
-                postal_code, latitude, longitude, emissions, units, facility_details,
-                facility_information, report_year
-            )
-        # Ajouter à la liste
-        # Add to the list
-        self._records.append(record)
-        return record
-
-    # Modifier un enregistrement existant (compatible avec polymorphisme)
-    # Edit an existing record (compatible with polymorphism)
-    def edit_record(self, index, npri_id=None, facility_name=None, company_name=None, address=None, city=None, province=None, postal_code=None, latitude=None, longitude=None, emissions=None, units=None, facility_details=None, facility_information=None, report_year=None):
-        """
-        Edit an existing emission record by index.
-
-        Args:
-            index (int): Index of the record to edit.
-            ... (inherited)
-
-        Returns:
-            bool: True if successful, False if index invalid.
-        """
-        # Vérifier si l'index est valide
-        # Check if the index is valid
-        if 0 <= index < len(self._records):
-            record = self._records[index]
-            # Mettre à jour les champs non nuls via setters (hérités de Record)
-            # Update non-null fields via setters (inherited from Record)
-            if npri_id is not None:
-                record.npri_id = npri_id
-            if facility_name is not None:
-                record.facility_name = facility_name
-            if company_name is not None:
-                record.company_name = company_name
-            if address is not None:
-                record.address = address
-            if city is not None:
-                record.city = city
-            if province is not None:
-                record.province = province
-            if postal_code is not None:
-                record.postal_code = postal_code
-            if latitude is not None:
-                record.latitude = latitude
-            if longitude is not None:
-                record.longitude = longitude
-            if emissions is not None:
-                record.emissions = emissions
-            if units is not None:
-                record.units = units
-            if facility_details is not None:
-                record.facility_details = facility_details
-            if facility_information is not None:
-                record.facility_information = facility_information
-            if report_year is not None:
-                record.report_year = report_year
-            return True
-        return False
-
-    # Supprimer un enregistrement (compatible avec polymorphisme)
-    # Delete a record (compatible with polymorphism)
-    def delete_record(self, index):
-        """
-        Delete a record by index.
-
-        Args:
-            index (int): Index of the record to edit.
-            ... (inherited)
-
-        Returns:
-            bool: True if successful, False if index invalid.
-        """
-        # Vérifier si l'index est valide
-        # Check if the index is valid
-        if 0 <= index < len(self._records):
-            # Supprimer l'enregistrement
-            # Delete the record
-            self._records.pop(index)
-            return True
-        return False
-
-    # Obtenir la liste des enregistrements
-    # Get the list of records
-    def get_records(self):
-        """
-        Get the current list of records.
-
-        Returns:
-            list: List of Record objects.
-        """
-        return self._records
-
-    # Nouvelle méthode pour filtrer les enregistrements sur plusieurs colonnes (Part 4)
-    # New method to filter records on multiple columns (Part 4)
-    def filter_records(self, city=None, emissions_min=None):
-        """
-        Filter records based on city and minimum emissions value.
-
-        Args:
-            city (str, optional): City to filter by.
-            emissions_min (float, optional): Minimum emissions value to filter by.
-
-        Returns:
-            list: Filtered list of Record objects.
-        """
-        # Filtrer la liste des enregistrements selon les critères fournis
-        # Filter the list of records based on the provided criteria
-        filtered = self._records
-        if city is not None:
-            # Filtrer par ville (insensible à la casse)
-            # Filter by city (case-insensitive)
-            filtered = [r for r in filtered if r.city.lower() == city.lower()]
-        if emissions_min is not None:
-            # Filtrer par émissions minimales
-            # Filter by minimum emissions
-            filtered = [r for r in filtered if r.emissions >= emissions_min]
-        # Retourner la liste filtrée
-        # Return the filtered list
-        return filtered
+            print("Invalid choice. Please try again.")
+            input("Press Enter to continue...")
