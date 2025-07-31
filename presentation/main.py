@@ -2,7 +2,7 @@
 CST8002 Programming Language Research Project
 Practical Project Part 04
 Professor: Stanley Pieda
-Due Date: 08/03/2025
+Due Date: 07/29/2025
 Author: Rachid Hankir
 """
 
@@ -195,3 +195,8 @@ def main():
         else:
             print("Invalid choice. Please try again.")
             input("Press Enter to continue...")
+
+# Exécution du programme si le fichier est lancé directement
+# Run the program if the file is executed directly
+if __name__ == "__main__":
+    main()
